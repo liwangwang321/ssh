@@ -1,0 +1,365 @@
+//管理
+//执行渲染
+layui.use(['table','layer','form',"upload"],function(){
+		var $=layui.$;
+		var data=document.getElementById("plan").value;//获得隐藏于传值
+		var table =layui.table;
+		var layer=layui.layer;
+		var form = layui.form;
+		var urlex=document.getElementById("plan").value;
+		
+	     /*展示数据表格  */
+		table.render({
+			  elem:'#test'//表格id
+			,url:data+'/marketing/marketingAction_list.action'//所对应调用的接口
+			,method:'post'		//提交方式
+		    ,cols:[[
+		    	/*根据数据库的表格所对应的名称  */
+		        /* {field:'pla_id',height:50, width:200, title: '计划编号', sort: true}*/
+		    	 {field:'chc_id',height:80, width:100, title: '客户编号', sort: true,align:'center'}
+		         ,{field:'chc_linkman',height:80, width:160, title: '联系人',align:'center'}
+		         ,{field:'chc_title',height:80, width:200,title: '概要', align:'center'}
+		         ,{field:'chc_tel',height:80, width:160,title: '联系电话', align:'center'}
+		         ,{field:'chc_due_date',height:80, width:180, title: '指派时间',sort: true,align:'center',
+		        	 	templet: function(d){
+				       		if(d.chc_due_date == null){
+				       			 return '<a style="color:red">还未有指派人！！</a>';
+				       		 } 
+				       		else{
+				       			return ''+d.chc_due_date+'';
+				       		}
+				       }
+				   }
+		         ,{field: 'chc_status',align:'center',
+		        	 	templet: function(d){
+				       		if(d.chc_status == 1){
+				       			 return '<span class="layui-badge-rim layui-bg-blue">未指派!!</span>';
+				       		 } 
+				       		 if(d.chc_status == 2){
+				       			 return '<span class="layui-badge layui-bg-green">开发中...</span> ';
+				       		 } 
+				       		 if(d.chc_status == 3){
+				                    return '<span class="layui-badge layui-bg-orange">开发成功</span>';
+				             } 
+				       		 if(d.chc_status == 4){
+				                    return '<span class="layui-badge">开发失败</span>';
+				             } 
+				       },
+				    title: '状态', align:'center',width:93,height:50, sort: true}
+				  ,{field:'right',align:'center',height:50, width:400, title: '操   作',templet: function(d){
+					       		if(d.chc_status == 1){
+					       			 return '';
+					       		 } 
+					       		
+					       		 if(d.chc_status == 2){//开发中
+					       			 return '<a style="color:#01AAED"  class="layui-btn layui-btn-xs layui-btn-radius layui-btn-primary" lay-event="details"><i class="layui-icon" ></i>机会详情</a>'+ 
+					       			 '<a style="color:#5FB878" class="layui-btn layui-btn-xs layui-btn-radius layui-btn-primary" lay-event="bin" value="1"><i class="layui-icon" ></i>开发成功</a>'+  
+					       			 '<a style="color:#FF5722" class="layui-btn layui-btn-xs layui-btn-radius layui-btn-primary" lay-event="no" value="2"><i class="layui-icon" ></i>开发失败</a>';
+					       		 } 
+					       		 if(d.chc_status == 3){//开发成功
+					                    return '<a style="color:#01AAED"  class="layui-btn layui-btn-xs layui-btn-radius layui-btn-primary" lay-event="details"><i class="layui-icon" ></i>机会详情</a>';
+					             } 
+					       		 if(d.chc_status == 4 ){//开发失败
+					                    return '<a style="color:#01AAED"  class="layui-btn layui-btn-xs layui-btn-radius layui-btn-primary" lay-event="details"><i class="layui-icon" ></i>机会详情</a>';
+					             } 
+					       		 
+					       		 
+				         }
+				    }//操作栏
+		    ]]
+		         ,page:'true'//分页
+		         , id: 'testReload'
+		  });//表格展示
+	      
+			//上方菜单操作栏(查询、以及  增加  按钮  )
+	  	active = {
+        //查询 	
+            reload: function () {
+                var chc_cust_name = $('#chc_cust_name');//根据文本id取值  客户名
+                var chc_title = $('#chc_title');//根据文本id取值   客户概要
+                var chc_linkman = $('#chc_linkman');//根据文本id取值 联系人
+                // 执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1
+                        // 重新从第 1 页开始
+                    },
+                    where: {
+                        key: 'chc_cust_name',
+                        chc_cust_name: chc_cust_name.val(),
+                        
+                        key: 'chc_title',
+                        chc_title: chc_title.val(),
+                        
+                        key: 'chc_linkman',
+                        chc_linkman: chc_linkman.val(),
+                    }
+                })
+              
+            },
+        
+	  	}
+	    $('#hh').on('click', function () {//制定计划弹出框
+	        layer.open({//弹出框
+                type: 1,
+                title: '执行计划创建',
+                maxmin: true, //允许全屏最小化
+                shadeClose: true, //点击遮罩关闭层
+                area: ['48%', '48%'],
+                content: $('#box2'),
+                btn: ['确定', '取消'],
+                yes: function (index, layero) {//确定执行函数
+                	console.log(layero); //执行添加方法
+                    $.getJSON(data+"/marketing/salPlanAction_addPlan.action", {
+                    	chc_id: $("#chc_id3").val(),//机会id
+                    	pla_todo: $("#pla_todo").val(),//创建计划日期
+                    	pla_toda: $("#pla_toda").val(),//计划内容
+                    	
+                    }, function (data) {
+	                	  //根据后台返回的参数，来进行判断
+                		  if(data>0){
+                			  layer.alert('添加成功',{icon:1,title:'提示'},function(i){
+                				  layer.close(i);
+                			  })
+                		  }
+                		  else{
+                			  layer.alert('添加失败',{icon:1,title:'提示'},function(i){
+                				  layer.close(i);
+                			  })
+                		  }
+                		  layer.close(index);//关闭弹出层
+                          $("#sal2")[0].reset()//重置form
+                	  })
+                }
+            });
+	    });//点击
+	  		  	
+	  		  	
+  		  $('#h1').on('click', function () {//制定计划详情
+  			  
+  	        table.render({
+    			 elem:'#sal'//表格id
+         			,url:data+'/marketing/salPlanAction_PlanList.action?chc_id='+document.getElementById("chc_id3").value+''//所对应调用的接口
+         			,method:'post'
+         			,page: true //提交方式
+         		    ,cols:[[
+         		    	/*根据数据库的表格所对应的名称  */
+         		    	 ,{field:'pla_date',height:120, width:160, title: '计划执行日期',align:'center', sort: true}
+         		         ,{field:'pla_todo',height:120, width:275, title: '计划内容' ,align:'center',}
+         		         ,{field:'pla_result',height:120, width:325, title: '计划执行结果',align:'center',
+         		           templet:function(d){
+         		        	   if(d.pla_result==null){
+         		        		   return  '<div> <input class="layui-input" id="'+d.pla_id+'" placeholder="请输入"> </div>'
+
+         		        	   }else{
+         		        		   return  '<div> <input class="layui-input" id="'+d.pla_id+'" value="'+d.pla_result+'"> </div>'
+         		        	   }
+         		        	   
+         		           }
+         		        	   
+         		         }
+         		         ,{field:'right',height:120, width:130, align:'center', title: '操作',
+         		        	 toolbar: '#Btn'
+         		         }
+         		    ]]
+         		         ,page:'true'//分页
+         		         , id: 'sal_reload'
+         	 });
+  	        layer.open({
+  	        	
+                 type: 1 //Page层类型
+                 ,skin: 'layui-layer-molv'
+                 ,area: ['65%', '65%']
+                 ,title: ['编辑销售机会','font-size:18px']
+                 ,btn: ['确定', '取消'] 
+                 ,shadeClose: true
+                 ,shade: 0 //遮罩透明度
+                 ,maxmin: true //允许全屏最小化
+                 ,content:$('#box3')  //弹窗id
+                 ,success:function(layero,index){//回显
+                 },yes:function(index,layero){
+                	  		layer.close(index);//关闭弹出层
+                 },cancel: function(index, layero){ 
+                	 table.reload('testReload', {//重载表格
+                         page: {
+                             curr: 1
+                             // 重新从第 1 页开始
+                         }
+                     })
+                		  return true; 
+                		}   
+               
+             
+             });
+  	    });//点击
+
+	
+  		
+  		  
+  		  
+	
+	
+//		table表格 监听 行内操作(编辑  以及  删除 按钮操作)  
+	    table.on('tool(test)', function(obj){//大表格
+	        var data = obj.data; //获得当前行数据
+	        var urlex=document.getElementById("plan").value;
+	        var tr=obj.tr//活动当前行tr 的  DOM对象
+	        console.log(data);
+	        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+	        
+	         if(layEvent === 'details'){ //回显数据弹框
+	             layer.open({
+	                 type: 1 //Page层类型
+	                 ,skin: 'layui-layer-molv'
+	                 ,area: ['1080px', '570px']
+	                 ,title: ['机会详情','font-size:18px']
+	                 ,btn: ['确定', '取消'] 
+	                 ,shadeClose: true
+	                 ,shade: 0 //遮罩透明度
+	                 ,maxmin: true //允许全屏最小化
+	                 ,content:$('#box1')  //弹窗id
+	                 ,success:function(layero,index){//回显
+		                 $('#chc_id3').val(data.chc_id);//主键id
+		                 $('#chc_source3').val(data.chc_source);//机会来源
+		                  $('#chc_cust_name3').val(data.chc_cust_name); //客户名称
+		                 $('#chc_title3').val(data.chc_title);//概要
+		                 $('#chc_rate3').val(data.chc_rate);//成功几率
+		                 $('#chc_linkman3').val(data.chc_linkman);//联系人
+		                 $('#chc_tel3').val(data.chc_tel);//联系电话
+		                 $('#chc_desc3').val(data.chc_desc);//机会描述
+		                 $('#user_id3').val(data.user_id);//创建人id
+		                 $('#chc_create_by3').val(data.chc_create_by);//创建人名
+		                 $('#chc_create_date3').val(data.chc_create_date);//创建人名字
+		                 $('#chc_due_id3').val(data.chc_due_to);//指派给某名字
+		                 $('#chc_due_date3').val(data.chc_due_date);//指派时的当前时间
+		                 $('#chc_status3').val(data.chc_status);//状态
+	                 },yes:function(index,layero){
+	                	
+           			  layer.close(index);//关闭弹出层
+	                 }
+	             });
+	         }//查看详情
+	        
+	         else if(layEvent === 'bin'){//修改成功
+	        	 layer.confirm('确定机会开发成功？',{title:'确定'}, function(index){
+	                 //向服务端发送删除指令og
+	                 $.getJSON(urlex+'/marketing/salPlanAction_editState.action',{
+	                	 chc_status:3,
+	                	 chc_id: data.chc_id,//机会id    
+	                 
+	                     }, function(ret){
+	                	 
+	                	 layer.close(index);//关闭弹窗
+	                	 
+                         table.reload('testReload', {//重载表格
+                             page: {
+                                 curr: 1
+                                 // 重新从第 1 页开始
+                             }
+                         })
+                         
+	                 });
+	                 layer.close(index);
+	             });
+	 	    }
+	         else if(layEvent === 'no'){//修改失败
+	        	 layer.confirm('确定机会开发失败？',{title:'确定'}, function(index){
+	                 //向服务端发送删除指令og
+	                 $.getJSON(urlex+'/marketing/salPlanAction_editState.action',{
+	                	 chc_status:4,
+	                	 chc_id: data.chc_id,//机会id    
+	                 
+	                     }, function(ret){
+	                	 
+	                	 layer.close(index);//关闭弹窗
+	                	 
+                         table.reload('testReload', {//重载表格
+                             page: {
+                                 curr: 1
+                                 // 重新从第 1 页开始
+                             }
+                         })
+                         
+	                 });
+	                 layer.close(index);
+	             });
+	 	    }
+      
+	    });//table表编辑
+	    
+	    
+	    
+	    table.on('tool(sal)', function(obj){//小表格
+	        var data = obj.data; //获得当前行数据
+	        var urlex=document.getElementById("plan").value;
+	        var tr=obj.tr//活动当前行tr 的  DOM对象
+	        console.log(data);
+	        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+	        
+	        if(layEvent === 'edit'){
+	        	//详情弹出框
+	    	  $.getJSON(urlex+'/marketing/salPlanAction_editPlan.action',{
+	    		pla_result: $("#"+data.pla_id+"").val(),
+	  			pla_date: data.pla_date,//计划执行日期
+	  			pla_todo: $("#pla_todo2").val(),//计划内容
+	  			pla_id: data.pla_id,//计划id
+	  			chc_id: data.chc_id,//机会id
+	    	  },function(data){
+	    	  //根据后台返回的参数，来进行判断
+	    		  if(data>0){
+	    			  layer.alert('保存成功',{icon:1,title:'提示'},function(i){
+	    				  layer.close(i);
+	    			  })
+	    		  }
+	    		  else{
+	    			  layer.alert('保存失败',{icon:1,title:'提示'},function(i){
+	    				  layer.close(i);
+	    			  })
+	    		  }
+	    		 
+	               table.reload('sal_reload',{//重载表格
+					  page:{
+						  curr:1
+					  }
+				  })
+	    	  });
+	         } 
+	         else if(layEvent === 'del'){ //删除
+	             layer.confirm('确定删除吗？',{title:'删除'}, function(index){
+	                 //向服务端发送删除指令og
+	                 $.getJSON(urlex+'/marketing/salPlanAction_delPlan.action',{pla_id:data.pla_id}, function(ret){
+	                         layer.close(index);//关闭弹窗
+	                         table.reload('sal_reload', {//重载表格
+	                             page: {
+	                                 curr: 1
+	                                 // 重新从第 1 页开始
+	                             }
+	                         })
+	                 });
+	                 layer.close(index);
+	             });
+	          }
+	    });//table表编辑
+	    
+	  
+	    
+	    
+	  
+});
+	//系统当前时间 创建机会当前shi'j
+	layui.use(['form', 'layedit', 'laydate'], function() {
+		  var d = new Date();
+	      var form = layui.form
+	          , layer = layui.layer
+	          , laydate = layui.laydate;
+	      laydate.render({
+	          elem: '#pla_date', //指定元素
+	          type:'datetime', // 可选择：年、月、日、时、分、秒
+	          format: 'yyyy年M月dd日 ', //指定时间格式
+	          value: d.getFullYear() + '-' + lay.digit(d.getMonth() + 1) + '-' + lay.digit(d.getDate()), // 指定值
+	      });
+	})
+	
+	
+	
+		 

@@ -1,0 +1,41 @@
+layui.use(['table','layer','form','rate'], function(){
+  var $ = layui.$;
+  var path = $("#path").val();
+  var table = layui.table;
+  var layer = layui.layer;
+  var form = layui.form;
+  var rate = layui.rate;
+  
+  //第一个实例
+  table.render({
+    elem: '#demo'
+    ,height: 520
+    ,url: path+'/client/clientAction_list.action' //数据接口
+    ,page: true //开启分页
+    ,cols: [[ //表头
+      {field: 'cust_no', title: '客户编号', width:125, sort: true, fixed: 'left'}
+      ,{field: 'cust_name', title: '客户名称', width:150}
+      ,{field: 'cust_region', title: '地区', width:100, sort: true}
+      ,{field: 'cust_addr', title: '地址', width: 235, sort: true}
+      ,{field: 'cust_tel', title: '电话', width: 135, sort: true}
+      ,{field: 'cust_bankroll', title: '注册资金', width: 115, sort: true}
+      ,{field: 'cust_status', title: '状态', width: 115, sort: true}
+      ,{field: 'right', title: '操作', width: 230, toolbar:"#barDemo"}
+    ]]
+  });
+  
+  
+
+  
+  
+  
+
+	  
+	  
+	  
+	  
+	  
+	  
+  
+});
+

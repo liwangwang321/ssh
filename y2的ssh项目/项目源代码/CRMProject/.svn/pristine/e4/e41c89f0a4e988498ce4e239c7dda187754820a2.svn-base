@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		
+		<bean class="com.crm.base.dao.JsonBaseDao" abstract="true" id="jsonBaseDao" ></bean>
+		<bean class="com.crm.base.web.BaseAction" abstract="true" id="baseAction" ></bean>
+		<bean class="com.crm.base.biz.BaseBiz" abstract="true" id="baseBiz" ></bean>
+	
+		<!-- spring与sprint-user整合的相关信息 -->
+		<import resource="classpath:spring-user.xml" />
+		<!-- spring与spring-client整合的相关信息 -->
+		<import resource="classpath:client/spring-client.xml" />
+		<!-- spring与spring-data.xml整合的相关信息 -->
+		<import resource="classpath:data/spring-data.xml" />
+		<!-- spring与spring-marketing.xml整合的相关信息 -->
+		<import resource="classpath:marketing/spring-marketing.xml" />
+		<!-- spring与spring-service.xml整合的相关信息 -->
+		<import resource="classpath:service/spring-service.xml" />
+		<!-- spring与spring-statement.xml整合的相关信息 -->
+		<import resource="classpath:statement/spring-statement.xml" />
+		<!-- spring与spring-role.xml整合的相关信息 -->
+		<import resource="classpath:role/spring-role.xml" />
+
+</beans>

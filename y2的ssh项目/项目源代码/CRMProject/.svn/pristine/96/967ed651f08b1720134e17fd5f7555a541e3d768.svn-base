@@ -1,0 +1,52 @@
+package com.crm.role.biz.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.crm.base.entity.PageBean;
+import com.crm.base.entity.TreeNode;
+import com.crm.role.biz.MenuBiz;
+import com.crm.role.dao.MenuDao;
+
+public class MenuBizImpl implements MenuBiz {
+	private MenuDao menuDao ;
+	
+
+	public MenuDao getMenuDao() {
+		return menuDao;
+	}
+
+
+
+	public void setMenuDao(MenuDao menuDao) {
+		this.menuDao = menuDao;
+	}
+
+
+
+	@Override
+	public List<TreeNode> list(Map<String, String[]> map, PageBean pageBean) throws InstantiationException, IllegalAccessException, SQLException {
+		// TODO Auto-generated method stub
+		return menuDao.list(map, pageBean);
+	}
+
+
+	/**
+	 * 查询所有菜单
+	 * @param map
+	 * @param pageBean
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws SQLException
+	 */
+	@Override
+	public List<Map<String, Object>> menuList(Map<String, String[]> map, PageBean pageBean)
+			throws InstantiationException, IllegalAccessException, SQLException {
+		// TODO Auto-generated method stub
+		return menuDao.menuList(map, pageBean);
+	}
+	
+
+}

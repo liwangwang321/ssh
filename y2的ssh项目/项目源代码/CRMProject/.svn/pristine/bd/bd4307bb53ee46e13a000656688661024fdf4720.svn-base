@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	
+	<bean id="marketingBiz" abstract="true" class="com.crm.marketing.biz.impl.MarketingBizImpl"></bean>
+	<bean id="salPlanBiz" abstract="true" class="com.crm.marketing.biz.impl.SalPlanBizImpl"></bean>
+	 
+	 
+	<bean id="marketingDao"  parent="jsonBaseDao" class="com.crm.marketing.dao.MarketingDao"></bean>
+	<bean id="salPlanDao"  parent="jsonBaseDao" class="com.crm.marketing.dao.SalPlanDao"></bean>
+	
+	
+	<bean id="marketingBizImpl" class="com.crm.marketing.biz.impl.MarketingBizImpl"  parent="marketingBiz" >
+		<property name="markDao" ref="marketingDao"></property>
+	</bean>
+	<bean id="salPlanBizImpl" class="com.crm.marketing.biz.impl.SalPlanBizImpl"  parent="salPlanBiz" >
+		<property name="planDao" ref="salPlanDao"></property>
+	</bean>	
+	
+	<bean id="marketingAction"  parent="baseAction" class="com.crm.marketing.web.MarketingAction">
+		<property name="markBiz" ref="marketingBizImpl"></property>
+	</bean>
+	<bean id="salPlanAction"  parent="baseAction" class="com.crm.marketing.web.SalPlanAction">
+		<property name="planBiz" ref="salPlanBizImpl"></property>
+	</bean>
+
+</beans>

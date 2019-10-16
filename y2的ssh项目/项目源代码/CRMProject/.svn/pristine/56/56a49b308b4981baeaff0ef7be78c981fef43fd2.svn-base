@@ -1,0 +1,131 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>客户流失管理</title>
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-3.3.1.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/layui/css/layui.css" media="all">
+<script src="${pageContext.request.contextPath }/layui/layui.js"></script>
+<script src="${pageContext.request.contextPath }/js/clientjs/lostIndex.js"></script>
+</head>
+
+<body>
+
+<input type="hidden" value="${pageContext.request.contextPath }" id="path">
+
+
+
+<blockquote class="layui-elem-quote">
+<!-- 搜索框 -->
+
+<div class="layui-form">
+
+    <div class="layui-form-item">
+         <label class="layui-form-label">编号：</label>
+        <div class="layui-input-inline">
+            <input type="text" id='cxbh' 
+                   lay-verify="required" placeholder="请输关键字" autocomplete="true"
+                   class="layui-input">
+        </div>
+        <label class="layui-form-label">客户名称：</label>
+        <div class="layui-input-inline">
+            <input type="text" id='cxmc' 
+                   lay-verify="required" placeholder="请输关键字" autocomplete="true"
+                   class="layui-input">
+        </div>
+        <label class="layui-form-label">客户经理：</label>
+        <div class="layui-input-inline">
+            <input type="text" id='cxkhjl' 
+                   lay-verify="required" placeholder="请输关键字" autocomplete="true"
+                   class="layui-input">
+        </div>
+        
+        <button id="cx" class="layui-btn layui-btn-normal layui-btn-radius" data-type="reload"><i class="layui-icon">&#xe615;</i>查询</button>
+ <div style="float: right;margin-right: 120px">
+		    <button id="ref" class="layui-btn layui-btn-normal layui-btn-radius" ><i class="layui-icon">&#xe669;</i>刷新</button>
+	    </div>
+    </div>
+</div>
+
+</blockquote>
+
+
+
+<table id="demo" lay-filter="tab1"></table>
+
+
+
+<input type="hidden" id="bbt">
+
+
+<!-- 暂缓流失弹框 -->
+<div class="site-text" style="margin: 5%; display: none;" id="zhlstk" >	
+	<form class="layui-form layui-form-pane"  style="width: 500px; height: 900px" id="zhlsbd" method="post" lay-filter="zhuijiabt">
+		<label class="layui-form-label">编号</label>
+	    <div class="layui-input-block">
+	      <input readonly="readonly" type="text" id="zhlst_id" class="layui-input">
+	    </div>
+	    <label class="layui-form-label">客户</label>
+	    <div class="layui-input-block">
+	      <input type="text" readonly="readonly" id="zhlst_cust_name" class="layui-input">
+	    </div>
+	    <label class="layui-form-label">客户经理</label>
+	    <div class="layui-input-block">
+	      <input type="text" readonly="readonly" id="zhlst_cust_manager_name" class="layui-input">
+	    </div>
+	    
+	    <label class="layui-form-label">上次下单时间</label>
+	    <div class="layui-input-block">
+	      <input type="text" readonly="readonly" id="zhlst_last_order_date" class="layui-input">
+	    </div>
+	    <label class="layui-form-label">暂缓措施</label>
+	    <div class="layui-input-block">
+	       <textarea readonly="readonly" id="zhlst_delay" class="layui-textarea"></textarea>
+	    </div>
+	    <label class="layui-form-label">追加暂缓措施</label>
+	    <div class="layui-input-block">
+	       <textarea id="zj"  placeholder="请输入内容" class="layui-textarea"></textarea>
+	    </div>
+    </form>
+</div>
+
+
+<!-- 确认流失弹出框 -->
+<div class="site-text" style="margin: 5%; display: none;" id="qrlstk" >	
+	<form class="layui-form layui-form-pane"  style="width: 500px; height: 900px" id="qrlsbd" method="post" >
+		<label class="layui-form-label">编号</label>
+	    <div class="layui-input-block">
+	      <input type="text"  readonly="readonly" id="zhlst_id1" class="layui-input">
+	    </div>
+	    <label class="layui-form-label">客户</label>
+	    <div class="layui-input-block">
+	      <input type="text" readonly="readonly" id="zhlst_cust_name1" class="layui-input">
+	    </div>
+	    <label class="layui-form-label">客户经理</label>
+	    <div class="layui-input-block">
+	      <input type="text" readonly="readonly" id="zhlst_cust_manager_name1" class="layui-input">
+	    </div>
+	    
+	    <label class="layui-form-label">上次下单时间</label>
+	    <div class="layui-input-block">
+	      <input type="text" readonly="readonly" id="zhlst_last_order_date1" class="layui-input">
+	    </div>
+	    <label class="layui-form-label">暂缓措施</label>
+	    <div class="layui-input-block">
+	       <textarea readonly="readonly" id="zhlst_delay1" class="layui-textarea"></textarea>
+	    </div>
+	     <label class="layui-form-label">流失原因</label>
+	    <div class="layui-input-block">
+	       <textarea  id="lst_reason1" class="layui-textarea"></textarea>
+	    </div>
+    </form>
+</div>
+
+
+
+</body>
+</html>
+
+

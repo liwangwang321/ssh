@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	
+	<bean class="com.crm.client.biz.ClientBiz" abstract="true" id="clientBiz" ></bean>
+	
+	
+	<bean class="com.crm.client.dao.ClientDao" parent="jsonBaseDao" id="clientDao"></bean>
+	<bean class="com.crm.client.dao.LinkmanDao" parent="jsonBaseDao" id="linkmanDao"></bean>
+	<bean class="com.crm.client.dao.ActivityDao" parent="jsonBaseDao" id="activityDao"></bean>
+	<bean class="com.crm.client.dao.LostDao" parent="jsonBaseDao" id="lostDao"></bean>
+	
+	<bean class="com.crm.client.biz.impl.ClientBizImpl"  parent="clientBiz" id="clientBizImpl">
+		<property name="clientDao" ref="clientDao"></property>
+	</bean>
+	<bean class="com.crm.client.biz.impl.LinkBizImpl"  parent="clientBiz" id="linkBizImpl">
+		<property name="linkmanDao" ref="linkmanDao"></property>
+	</bean>
+	<bean class="com.crm.client.biz.impl.ActivityBizImpl"  parent="clientBiz" id="activityBizImpl">
+		<property name="activityDao" ref="activityDao"></property>
+	</bean>
+	<bean class="com.crm.client.biz.impl.LostBizImpl"  parent="clientBiz" id="lostBizImpl">
+		<property name="lostDao" ref="lostDao"></property>
+	</bean>
+	 
+	
+	<bean class="com.crm.client.web.UserAction"  parent="baseAction" id="clientUserAction">
+		<property name="clientBiz" ref="clientBizImpl"></property>
+	</bean>
+	<bean class="com.crm.client.web.LinkAction"  parent="baseAction" id="linkAction">
+		<property name="clientBiz" ref="linkBizImpl"></property>
+	</bean>
+	<bean class="com.crm.client.web.UserAction"  parent="baseAction" id="activityAction">
+		<property name="clientBiz" ref="activityBizImpl"></property>
+	</bean>
+	<bean class="com.crm.client.web.UserAction"  parent="baseAction" id="lostAction">
+		<property name="clientBiz" ref="lostBizImpl"></property>
+	</bean>
+
+</beans>

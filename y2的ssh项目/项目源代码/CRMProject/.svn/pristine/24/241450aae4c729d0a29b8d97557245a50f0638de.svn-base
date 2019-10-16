@@ -1,0 +1,42 @@
+	layui.config({
+    	base: 'layui/'
+	}).extend({
+	    treetable: 'treetable-lay/treetable'
+	}).use(['form', 'treetable', 'layer'], function () {
+	    var treetable = layui.treetable;
+	    var $=layui.$;
+	    var lj=$("#lj").val();
+	      treetable.render({
+	    	method:"post",
+            treeColIndex: 1,//树形图标显示在第几列
+            treeSpid: -1,//最上级的父级id
+            treeIdName: 'menu_id',//id字段的名称
+            treePidName: 'menu_pid',//pid字段的名称，父级菜单id
+            treeDefaultClose: false,//是否默认折叠
+            treeLinkage: false,//父级展开时是否自动展开所有子级
+            elem: '#treetable',//表格id
+            url: lj+'/role/menuAction_menuList.action', 
+            page: false,
+            cols: [[
+            	{type:'checkbox'},
+                {field: 'menu_name', title: '菜单名字'},
+                {field: 'menu_id', title: 'id'},
+                {field: 'menu_url', title: '资源路径'},
+                {field: 'menu_pid', title: 'pid'},
+                {templet: '#barDemo', title: '操作'}
+            ]],
+            done: function () {
+                layer.closeAll('loading');
+            }
+        });  
+	      
+	     $("#zk").click(function(){
+	    	 alert("adasd");
+	    	 treetable.expandAll("#treetable");
+	     })
+	     
+	      $("#zd").click(function(){
+	    	  treetable.foldAll("#treetable");
+	     })
+
+	});

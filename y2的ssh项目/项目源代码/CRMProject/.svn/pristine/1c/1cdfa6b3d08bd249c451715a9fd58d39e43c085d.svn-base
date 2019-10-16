@@ -1,0 +1,499 @@
+layui.use(['table','layer','form','rate'], function(){
+  var $ = layui.$;
+  var path = $("#path").val();
+  var table = layui.table;
+  var layer = layui.layer;
+  var form = layui.form;
+  var rate = layui.rate;
+  
+  //第一个实例
+  table.render({
+    elem: '#demo'
+    ,height: 520
+    ,url: path+'/client/clientAction_list.action' //数据接口
+    ,page: true //开启分页
+    ,cols: [[ //表头
+      {field: 'cust_no', title: '客户编号', width:125, sort: true, fixed: 'left'}
+      ,{field: 'cust_name', title: '客户名称', width:150}
+      ,{field: 'cust_region', title: '地区', width:100, sort: true}
+      ,{field: 'cust_addr', title: '地址', width: 235, sort: true}
+      ,{field: 'cust_tel', title: '电话', width: 135, sort: true}
+      ,{field: 'cust_bankroll', title: '注册资金', width: 115, sort: true}
+      ,{field: 'cust_status', title: '状态', width: 115, sort: true}
+      ,{field: 'right', title: '操作', width: 230, toolbar:"#barDemo"}
+    ]]
+  });
+  
+  
+
+  
+  
+  
+//获取按钮
+	  table.on('tool(test)', function(obj){
+	  var data = obj.data; //获得当前行数据
+	  var tr=obj.tr//活动当前行tr 的  DOM对象
+	  if(obj.event === 'del'){ //删除
+	      layer.confirm('确定删除吗？',{title:'删除'}, function(index){
+	          //向服务端发送删除指令og
+	          $.getJSON(path+'/client/clientAction_del.action',{cust_no:data.cust_no}, function(ret){
+	                  layer.close(index);//关闭弹窗
+	                  table.reload('demo', {//重载表格
+	                  })
+	          });
+	          layer.close(index);
+	      });
+	  }
+	  else if(obj.event === 'look'){ 
+		  layer.open({
+	          type: 1 //Page层类型
+	          ,skin: 'layui-layer-molv'
+	          ,area: ['90%', '90%']
+	          ,title: ['查看信息','font-size:18px']
+	          ,btn: ['确定', '取消'] 
+	          ,shadeClose: true
+	          ,shade: 0 //遮罩透明度
+	          ,maxmin: true //允许全屏最小化
+	          ,content:$("#window1")  //弹窗路径
+	          ,success:function(layero,index){
+	                $('#cust_no1').val(data.cust_no);
+	                $('#cust_name1').val(data.cust_name);
+	                $('#cust_region1').val(data.cust_region);
+	                $('#user_id1').val(data.user_id);
+	                $('#cust_manager_name1').val(data.cust_manager_name);
+	                $('#cust_level1').val(data.cust_level);
+	                $('#cust_satisfy1').val(data.cust_satisfy);
+	                $('#cust_credit1').val(data.cust_credit);
+	                rate.render({
+	                	elem: '#test3'
+	                		,value: data.cust_satisfy
+	                		,theme: '#1E9FFF'
+	                });
+	               rate.render({
+	                	elem: '#test4'
+	            		,value: data.cust_credit
+	            		,theme: '#1E9FFF'
+	                });
+	                $('#cust_addr1').val(data.cust_addr);
+	                $('#cust_tel1').val(data.cust_tel);
+	                $('#cust_website1').val(data.cust_website);
+	                $('#cust_bankroll1').val(data.cust_bankroll);
+	                $('#cust_status1').val(data.cust_status);
+	                form.render();
+	          },yes:function(index,layero){
+				  layer.close(i);
+	              layer.close(index);//关闭弹出层
+	              $("#dict")[0].reset()//重置form
+	 			  table.reload('demo',{//重载表格
+	 				  page:{
+	 					  curr:1
+	 				  }
+	 			  })
+	          }
+	      });
+		  
+	  }
+	  else if(obj.event === 'edit'){ //编辑 
+	      layer.open({
+	          type: 1 //Page层类型
+	          ,skin: 'layui-layer-molv'
+	          ,area: ['70%', '70%']
+	          ,title: ['编辑书本信息','font-size:18px']
+	          ,btn: ['确定', '取消'] 
+	          ,shadeClose: true
+	          ,shade: 0 //遮罩透明度
+	          ,maxmin: true //允许全屏最小化
+	          ,content:$("#window")  //弹窗路径
+	          ,success:function(layero,index){
+	                $('#cust_no').val(data.cust_no);
+	                $('#cust_name').val(data.cust_name);
+	                $('#cust_region').val(data.cust_region);
+	                $('#user_id').val(data.user_id);
+	                $('#cust_manager_name').val(data.cust_manager_name);
+	                $('#cust_level').val(data.cust_level);
+	                $('#test1v').val(data.cust_satisfy);
+	                $('#test2v').val(data.cust_credit);
+	                rate.render({
+	                	elem: '#test1'
+	                		,value: data.cust_satisfy
+	                		,theme: '#1E9FFF'
+	            			,choose: function(value){
+	                		    $('#test1v').val(value);
+	                		 }
+	                });
+	               rate.render({
+	                	elem: '#test2'
+	            		,value: data.cust_credit
+	            		,theme: '#1E9FFF'
+	            		,choose: function(value){
+	            		    $('#test2v').val(value);
+	            		  }
+	                });
+	                $('#cust_addr').val(data.cust_addr);
+	                $('#cust_tel').val(data.cust_tel);
+	                $('#cust_website').val(data.cust_website);
+	                $('#cust_bankroll').val(data.cust_bankroll);
+	                $('#cust_status').val(data.cust_status);
+	                form.render();
+	          },yes:function(index,layero){
+	         	  $.getJSON(path+'/client/clientAction_edit.action',{
+	         		cust_no: $('#cust_no').val(),
+	         		cust_name:$('#cust_name').val(),
+	         		cust_region:$('#cust_region').val(),
+	         		user_id:$('#user_id').val(),
+	         		cust_manager_name:$('#cust_manager_name').val(),
+	         		cust_level:$('#cust_level').val(),
+	         		cust_satisfy:$('#test1v').val(),
+	         		cust_credit:$('#test2v').val(),
+	         		cust_addr:$('#cust_addr').val(),
+	         		cust_tel:$('#cust_tel').val(),
+	         		cust_website:$('#cust_website').val(),
+	         		cust_bankroll:$('#cust_bankroll').val(),
+	         		cust_status:$('#cust_status').val()
+	         	  },function(data){
+	         	  //根据后台返回的参数，来进行判断
+	         		  if(data>0){
+	         			  layer.alert('编辑成功',{icon:1,title:'提示'},function(i){
+	         				  layer.close(i);
+	                           layer.close(index);//关闭弹出层
+	                           $("#dict")[0].reset()//重置form
+	         			  })
+	         			  table.reload('demo',{//重载表格
+	         				  page:{
+	         					  curr:1
+	         				  }
+	         			  })
+	         		  }
+	         	  });
+	          }
+	      });
+	  }
+	
+	});
+	  
+	  
+	  
+	 	 //搜索按钮
+	  
+	  $('#cx').on('click', function () {
+		    // 搜索条件
+		    var name = $('#cust_id').val();
+		    var type = $('#cust_name').val();
+		    var item = $('#cust_region').val();
+		    table.reload('demo', {
+		        method: 'post'
+		        , where: {
+		            'cust_id': name,
+		            'cust_name':type,
+		            'cust_region':item
+		        }
+		        , page: {
+		            curr: 1
+		        }
+		    });
+		});
+	  
+	  
+	 	 //联系人新增按钮
+	  
+	  $('#xzlxr').on('click', function () {
+		  layer.open({//弹出框
+              type: 1,
+              title: '联系人新增',
+              maxmin: true, //允许全屏最小化
+              shadeClose: true, //点击遮罩关闭层
+              area: ['70%', '90%'],
+              content: $('#xzlxrtk'),
+              btn: ['确定', '取消'],
+              yes: function (index, layero) {//确定执行函数
+            	  //执行添加方法
+                  $.getJSON(path+"/client/linkAction_addMark.action", {
+                	 lkm_name: $("#xzlxrlkm_name").val(),
+                	 lkm_sex: $('#xzlxrlkm_sex input[name="xz_sex"]:checked ').val(),
+                	 lkm_postion: $("#xzlxrlkm_postion").val(),
+                	 lkm_tel: $("#xzlxrlkm_tel").val(),
+                	 lkm_memo: $("#xzlxrlkm_memo").val(),
+                  }, function (data) {
+	                	  //根据后台返回的参数，来进行判断
+              		  if(data>0){
+              			  layer.alert('创建成功',{icon:1,title:'提示'},function(i){
+              				  layer.close(i);
+              			  })
+              		  }
+              		  else{
+              			  layer.alert('创建失败',{icon:1,title:'提示'},function(i){
+              				  layer.close(i);
+              			  })
+              		  }
+              		  layer.close(index);//关闭弹出层
+                        $("#xzlxrbd")[0].reset()//重置form
+                         table.reload('lxrtab',{//重载表格
+          				  page:{
+          					  curr:1
+          				  }
+          			  })
+              	  })
+              }
+          });
+		});
+	  
+	  
+	  
+	  
+	  
+	  //    联系人
+	  
+	  $('#lxr').on('click', function () {//制定计划弹出框
+		  $('#lxr_cust_no').val($('#cust_no1').val());
+		  $('#lxr_cust_name').val($('#cust_no1').val());
+		  var no = $('#cust_no1').val();
+		  table.render({
+			    elem: '#lxrtab'
+			    ,height: 320
+			    ,width: 810
+			    ,url: path+'/client/clientAction_list.action?cust_no='+no+'&&method=cst_linkman' //数据接口
+			    ,page: true //开启分页
+			    ,cols: [[ //表头
+			      {field: 'lkm_name', title: '姓名', width:80, sort: true}
+			      ,{field: 'lkm_sex', title: '性别', width:80}
+			      ,{field: 'lkm_postion', title: '职位', width:100, sort: true}
+			      ,{field: 'lkm_tel', title: '办公电话', width: 135, sort: true}
+			      ,{field: 'lkm_memo', title: '备注', width: 250, sort: true}
+			      ,{field: 'right', title: '操作', width: 150,templet: function(d){
+		    		  return '<a class="layui-btn layui-btn-mini" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></a>  <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del"><i class="layui-icon layui-icon-close"></i></a>'
+			      }}
+			    ]]
+			  });
+	        layer.open({//弹出框
+              type: 1,
+              title: '联系人',
+              maxmin: true, //允许全屏最小化
+              shadeClose: true, //点击遮罩关闭层
+              area: ['70%', '90%'],
+              content: $('#lxrtk'),
+              btn: ['确定', '取消'],
+              yes: function (index, layero) {//确定执行函数
+            	  layer.close(index);//关闭弹出层
+              }
+          });
+	    });
+ 
+	  
+	  
+ //    交往记录
+	  
+	  $('#jwjl').on('click', function () {//制定计划弹出框
+		  
+	  	var no = $('#cust_no1').val();
+		  
+		  table.render({
+			    elem: '#jwjltab'
+			    ,height: 520
+			    ,url: path+'/client/clientAction_list.action?cust_no='+no+'&&method=cst_activity' //数据接口
+			    ,page: true //开启分页
+			    ,cols: [[ //表头
+			      {field: 'cust_no', title: '客户编号', width:125, sort: true, fixed: 'left'}
+			      ,{field: 'cust_name', title: '客户名称', width:150}
+			      ,{field: 'cust_region', title: '地区', width:100, sort: true}
+			      ,{field: 'cust_addr', title: '地址', width: 235, sort: true}
+			      ,{field: 'cust_tel', title: '电话', width: 135, sort: true}
+			      ,{field: 'cust_bankroll', title: '注册资金', width: 115, sort: true}
+			      ,{field: 'cust_status', title: '状态', width: 115, sort: true}
+			      ,{field: 'right', title: '操作', width: 230, toolbar:"#barDemo"}
+			    ]]
+		  });
+		  
+		  
+		  
+	        layer.open({//弹出框
+              type: 1,
+              title: '交往记录',
+              maxmin: true, //允许全屏最小化
+              shadeClose: true, //点击遮罩关闭层
+              area: ['60%', '60%'],
+              content: $('#jwjltk'),
+              btn: ['确定', '取消'],
+              yes: function (index, layero) {//确定执行函数
+              	console.log(layero); //执行添加方法
+                  $.getJSON(data+"/marketing/marketingAction_addMark.action", {
+                  	chc_cust_name: $("#chc_cust_name2").val(),//客户名
+                  	chc_source: $("#chc_source2").val(),//机会来源
+                  	chc_title: $("#chc_title2").val(),//概要
+                  	chc_rate: $("#chc_rate2").val(),//成功几率
+                  	chc_linkman: $("#chc_linkman2").val(),//联系人
+                  	chc_tel: $("#chc_tel2").val(),//联系人电话
+                  	chc_desc: $("#chc_desc2").val(),//机会描述
+                  	user_id: $("#user_id2").val(),//创建人id 用隐藏于传值
+                  	chc_create_by: $("#chc_create_by2").val(),//创建人名 
+                  	chc_create_date: $("#chc_create_date2").val(),//创建日期 
+                  }, function (data) {
+	                	  //根据后台返回的参数，来进行判断
+              		  if(data>0){
+              			  layer.alert('创建成功',{icon:1,title:'提示'},function(i){
+              				  layer.close(i);
+              			  })
+              			  
+              		  }
+              		  else{
+              			  layer.alert('创建失败',{icon:1,title:'提示'},function(i){
+              				  layer.close(i);
+              			  })
+              		  }
+              		  layer.close(index);//关闭弹出层
+                        $("#jwjlbd")[0].reset()//重置form
+                         table.reload('testReload',{//重载表格
+          				  page:{
+          					  curr:1
+          				  }
+          			  })
+              	  })
+              }
+          });
+	    });//点击
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  // 联系人绑定操作
+	  
+	  table.on('toolbar(lxrcz)', function(obj){
+		  var data = obj.data; //获得当前行数据
+		  var tr=obj.tr//活动当前行tr 的  DOM对象
+		  if(obj.event === 'del'){ //删除
+		      layer.confirm('确定删除吗？',{title:'删除'}, function(index){
+		          //向服务端发送删除指令og
+		          $.getJSON(path+'/data/dictAction_del.action',{dict_id:data.dict_id}, function(ret){
+		                  layer.close(index);//关闭弹窗
+		                  table.reload('demo', {//重载表格
+		                  })
+		          });
+		          layer.close(index);
+		      });
+		  }else if(obj.event === 'edit'){ //编辑
+			  
+		      layer.open({
+		          type: 1 //Page层类型
+		          ,skin: 'layui-layer-molv'
+		          ,area: ['70%', '70%']
+		          ,title: ['编辑信息','font-size:18px']
+		          ,btn: ['确定', '取消'] 
+		          ,shadeClose: true
+		          ,shade: 0 //遮罩透明度
+		          ,maxmin: true //允许全屏最小化
+		          ,content:$("#window")  //弹窗路径
+		          ,success:function(layero,index){
+		                $('#dict_type_name').val(data.dict_type_name);
+		                $('#dict_item').val(data.dict_item); 
+		                $('#dict_value').val(data.dict_value);
+		               	$("input[name='dict_is_editable'][value="+data.dict_is_editable+"]").prop("checked",true);
+		                $('#dict_type').val(data.dict_type); 
+		                form.render();
+		          },yes:function(index,layero){
+		         	  $.getJSON(path+'/data/dictAction_edit.action',{
+		                dict_id: data.dict_id,
+		                dict_type_name: $('#dict_type_name').val(),
+		           		dict_item: $('#dict_item').val(),
+		           		dict_value: $('#dict_value').val(),
+		           		dict_is_editable: $('#editnum input[name="dict_is_editable"]:checked ').val(),
+		           		dict_type: $('#dict_type').val()
+		         	  },function(data){
+		         	  //根据后台返回的参数，来进行判断
+		         		  if(data>0){
+		         			  layer.alert('编辑成功',{icon:1,title:'提示'},function(i){
+		         				  layer.close(i);
+		                           layer.close(index);//关闭弹出层
+		                           $("#dict")[0].reset()//重置form
+		         			  })
+		         			  table.reload('demo',{//重载表格
+		         				  page:{
+		         					  curr:1
+		         				  }
+		         			  })
+		         		  }
+		         	  });
+		          }
+		      });
+		  }
+	});
+	  
+	  
+	  
+	  
+	  
+// 交往记录绑定操作
+	  
+	  table.on('toolbar(jwjlcz)', function(obj){
+		  var data = obj.data; //获得当前行数据
+		  var tr=obj.tr//活动当前行tr 的  DOM对象
+		  if(obj.event === 'del'){ //删除
+		      layer.confirm('确定删除吗？',{title:'删除'}, function(index){
+		          //向服务端发送删除指令og
+		          $.getJSON(path+'/data/dictAction_del.action',{dict_id:data.dict_id}, function(ret){
+		                  layer.close(index);//关闭弹窗
+		                  table.reload('demo', {//重载表格
+		                  })
+		          });
+		          layer.close(index);
+		      });
+		  }else if(obj.event === 'edit'){ //编辑
+			  
+		      layer.open({
+		          type: 1 //Page层类型
+		          ,skin: 'layui-layer-molv'
+		          ,area: ['70%', '70%']
+		          ,title: ['编辑信息','font-size:18px']
+		          ,btn: ['确定', '取消'] 
+		          ,shadeClose: true
+		          ,shade: 0 //遮罩透明度
+		          ,maxmin: true //允许全屏最小化
+		          ,content:$("#window")  //弹窗路径
+		          ,success:function(layero,index){
+		                $('#dict_type_name').val(data.dict_type_name);
+		                $('#dict_item').val(data.dict_item); 
+		                $('#dict_value').val(data.dict_value);
+		               	$("input[name='dict_is_editable'][value="+data.dict_is_editable+"]").prop("checked",true);
+		                $('#dict_type').val(data.dict_type); 
+		                form.render();
+		          },yes:function(index,layero){
+		         	  $.getJSON(path+'/data/dictAction_edit.action',{
+		                dict_id: data.dict_id,
+		                dict_type_name: $('#dict_type_name').val(),
+		           		dict_item: $('#dict_item').val(),
+		           		dict_value: $('#dict_value').val(),
+		           		dict_is_editable: $('#editnum input[name="dict_is_editable"]:checked ').val(),
+		           		dict_type: $('#dict_type').val()
+		         	  },function(data){
+		         	  //根据后台返回的参数，来进行判断
+		         		  if(data>0){
+		         			  layer.alert('编辑成功',{icon:1,title:'提示'},function(i){
+		         				  layer.close(i);
+		                           layer.close(index);//关闭弹出层
+		                           $("#dict")[0].reset()//重置form
+		         			  })
+		         			  table.reload('demo',{//重载表格
+		         				  page:{
+		         					  curr:1
+		         				  }
+		         			  })
+		         		  }
+		         	  });
+		          }
+		      });
+		  }
+	});
+	 
+	  
+	  
+
+	  
+	  
+	  
+	  
+	  
+	  
+  
+});
+

@@ -1,0 +1,254 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-3.3.1.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/layui/css/layui.css" media="all">
+<script src="${pageContext.request.contextPath }/layui/layui.js"></script>
+<title>营销</title>
+</head>
+<body class="child-body">
+<div class="child-nav">
+    <span class="layui-breadcrumb">
+         <a>营销管理</a>
+         <a><cite>分类列表</cite></a>
+    </span>
+</div>
+
+
+<blockquote class="layui-elem-quote">
+<!-- 搜索框 -->
+
+<div class="layui-form">
+关键词:
+    <div class="layui-form-item">
+        <label class="layui-form-label">客户名称</label>
+        <div class="layui-input-inline">
+            <input type="text" id='chc_cust_name' name="chc_cust_name"
+                   lay-verify="required" placeholder="请输关键字" autocomplete="true"
+                   class="layui-input">
+        </div>
+        <label class="layui-form-label">客户概要</label>
+        <div class="layui-input-inline">
+            <input type="text" id='chc_title' name="chc_title"
+                   lay-verify="required" placeholder="请输关键字" autocomplete="true"
+                   class="layui-input">
+        </div>
+        <button class="layui-btn layui-btn-normal layui-btn-radius" data-type="reload"><i class="layui-icon">&#xe615;</i>查询</button>
+		<button class="layui-btn layui-btn-normal layui-btn-radius" data-type="add"><i class="layui-icon">&#xe654;</i>新建</button>
+		<button class="layui-btn layui-btn-normal layui-btn-radius" id="ref"><i class="layui-icon layui-icon-refresh"></i>刷新</button>
+		
+    </div>
+</div>
+
+
+
+
+
+</blockquote>
+
+
+
+<!--隐藏域传值  -->
+<input type="hidden"  id="sj" value="${pageContext.request.contextPath}" >
+<!--根据table id 来展示表格数据  -->
+<table class="layui-hide" id="test" lay-filter="test" ></table>
+
+<!-- 增加 2
+ 	   修改 1
+  	   查看3
+  -->
+
+<!-- 增加弹出层  -->
+	 <div class="site-text" style="margin: 5%; display: none" id="box1"  >
+	    <form class="layui-form layui-form-pane"  onsubmit="return false" id="sal">
+	         <div class="layui-form-item">
+		          <label class="layui-form-label">机会来源</label>
+				    <div class="layui-input-inline">
+				      <input type="text" name="chc_source" id="chc_source2"  placeholder="请输入" class="layui-input">
+				    </div>
+	            <label class="layui-form-label">客户名称</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_cust_name2" placeholder="请输入" ><br>
+	            </div>
+	            
+	             <label class="layui-form-label">成功机率</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_rate2" placeholder="请输入" ><br>
+	            </div>
+	             <label class="layui-form-label">联系人</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"   id="chc_linkman2" placeholder="请输入" ><br>
+	            </div>
+	             <label class="layui-form-label">联系人电话</label>
+	            <div class="layui-input-inline">
+	                <input type="tel" class="layui-input"  lay-verify="required|phone" placeholder="请输入" id="chc_tel2" ><br>
+	            </div>
+	            	<hr>
+	             <label class="layui-form-label">概要</label>
+	            <div class="layui-input-block">
+	                <input type="text" class="layui-input"  id="chc_title2" placeholder="请输入"><br>
+	            </div>
+	            <hr>
+	             <label class="layui-form-label">创建人</label>
+	            <div class="layui-input-inline">
+	            	<!--隐藏域传值  创建人id  -->
+					<input type="hidden"  id="user_id2" name="user_id" value="${user.user_id }" ><!-- 创建人id -->
+	                <input type="text" class="layui-input" value="${user.user_name }" disabled="disabled" id="chc_create_by2" ><br>
+	            </div>
+	             <label class="layui-form-label">创建时间</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_create_date2"  disabled="disabled" name=chc_create_date><br>
+	            </div>
+	            <hr>
+			    <label class="layui-form-label">机会描述</label>
+			    <div class="layui-input-block">
+			      <textarea placeholder="请输入内容" class="layui-textarea" id="chc_desc2" placeholder="请输入" name=chc_desc></textarea>
+			   </div>
+	            
+	        </div>
+	    </form>
+	</div> 
+	<!-- 增加 -->
+	
+
+	 <!-- 修改弹出层  -->
+	 <div class="site-text" style="margin: 5%; display: none" id="box2"  target="test123">
+	    <form class="layui-form layui-form-pane"   onsubmit="return false" id="sal2">
+	         <div class="layui-form-item">
+	         	 <label class="layui-form-label">客户编号</label>
+		         <div class="layui-input-inline">
+		             <input type="text" class="layui-input layui-disabled text_add "  id="chc_id1"  name=chc_id><br>
+		          </div>
+		         <label class="layui-form-label">机会来源</label>
+		         <div class="layui-input-inline">
+		             <input type="text" class="layui-input"  id="chc_source1"  placeholder="请输入" name=chc_source><br>
+		          </div>
+	          
+	            <label class="layui-form-label">客户名称</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_cust_name1" placeholder="请输入" name=chc_cust_name><br>
+	            </div>
+	            <hr>
+	             <label class="layui-form-label">成功机率</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_rate1" placeholder="请输入" name=chc_rate><br>
+	            </div>
+	            
+	             <label class="layui-form-label">联系人</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"   id="chc_linkman1" placeholder="请输入" name=chc_linkman><br>
+	            </div>
+	             <label class="layui-form-label">联系人电话</label>
+	            <div class="layui-input-inline">
+	                <input type="tel" class="layui-input"  placeholder="请输入" id="chc_tel1"  name=chc_tel><br>
+	            </div>
+	             <hr>
+	             <label class="layui-form-label">概要</label>
+	            <div class="layui-input-block">
+	                 <input type="text" name="title" autocomplete="off" id="chc_title1" placeholder="请输入" name=chc_title class="layui-input"><br>
+	            </div>
+	           
+	             <label class="layui-form-label">创建人</label>
+	            <div class="layui-input-inline">
+	            	<input type="hidden"  id="chc_status1"  ><!-- 状态id -->
+	           	 	<input type="hidden"  id="user_id1" name="user_id" ><!-- 创建人id -->
+	                <input type="text" class="layui-input"  disabled="disabled" id="chc_create_by1" placeholder="请输入" ><br>
+	            </div>
+	            
+	             <label class="layui-form-label">创建时间</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_create_date1"  disabled="disabled" placeholder="请输入" name=chc_create_date><br>
+	            </div>
+        	      <label class="layui-form-label">指派给</label>
+			      <div class="layui-input-inline">
+			         <select class="seloption" name="chc_due_id" id="chc_due_id1" lay-verify="required" lay-filter="xmFilter">
+	                    <option value=""></option>
+	                </select>
+			      </div>
+			     <!--   <label class="layui-form-label">指派时间</label> -->
+	            <div class="layui-input-inline">
+	                <input type="hidden" class="layui-input"  id="chc_due_date1" ><br>
+	            </div>
+	            <hr>
+			    <label class="layui-form-label">机会描述</label>
+			    <div class="layui-input-block">
+			      <textarea placeholder="请输入内容" class="layui-textarea" id="chc_desc1" placeholder="请输入" name=chc_desc></textarea>
+			   </div>
+	            
+	        </div>
+	    </form>
+	</div> 
+	
+	
+	<!-- 查看弹出层  -->
+	 <div class="site-text" style="margin: 5%; display: none" id="box3"  target="test123">
+	    <form class="layui-form layui-form-pane"  disabled="disabled" onsubmit="return false" id="sal3">
+	         <div class="layui-form-item">
+	         	 <label class="layui-form-label">客户编号</label>
+		         <div class="layui-input-inline">
+		             <input type="text" class="layui-input layui-disabled text_add "  id="chc_id3"  name=chc_id><br>
+		          </div>
+		         <label class="layui-form-label">机会来源</label>
+		         <div class="layui-input-inline">
+		             <input type="text" class="layui-input"  id="chc_source3"  placeholder="请输入" name=chc_source><br>
+		          </div>
+	          
+	            <label class="layui-form-label">客户名称</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_cust_name3" placeholder="请输入" name=chc_cust_name><br>
+	            </div>
+	            <hr>
+	             <label class="layui-form-label">成功机率</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_rate3" placeholder="请输入" name=chc_rate><br>
+	            </div>
+	             <label class="layui-form-label">联系人</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"   id="chc_linkman3" placeholder="请输入" name=chc_linkman><br>
+	            </div>
+	             <label class="layui-form-label">联系人电话</label>
+	            <div class="layui-input-inline">
+	                <input type="tel" class="layui-input"  placeholder="请输入" id="chc_tel3"  name=chc_tel><br>
+	            </div>
+	             <label class="layui-form-label">概要</label>
+	            <div class="layui-input-block">
+	                 <input type="text" name="title" autocomplete="off" id="chc_title3" placeholder="请输入" disabled="disabled" name=chc_title class="layui-input"><br>
+	            </div>
+	            
+	             <label class="layui-form-label">创建人</label>
+	            <div class="layui-input-inline">
+	            	<input type="hidden"  id="user_id3" name="user_id" ><!-- 创建人id -->
+	                <input type="text" class="layui-input" disabled="disabled" id="chc_create_by3" placeholder="请输入" name=chc_create_by><br>
+	            </div>
+	            
+	             <label class="layui-form-label">创建时间</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_create_date3" disabled="disabled" placeholder="请输入" name=chc_create_date><br>
+	            </div>
+	            <hr>
+	             <label class="layui-form-label">指派给</label>
+			    <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_due_id3"  disabled="disabled"  name=chc_due_id><br>
+			    </div>
+			    <label class="layui-form-label">指派时间</label>
+	            <div class="layui-input-inline">
+	                <input type="text" class="layui-input"  id="chc_due_date3" disabled="disabled" name=chc_due_date3><br>
+	            </div>
+	            <hr>
+			    <label class="layui-form-label">机会描述</label>
+			    <div class="layui-input-block">
+			      <textarea placeholder="请输入内容"  disabled="disabled" class="layui-textarea" id="chc_desc3" placeholder="请输入" name=chc_desc></textarea>
+			   </div>
+	            
+	        </div>
+	    </form>
+	</div> 
+
+</body>
+<script src="${pageContext.request.contextPath }/js/marketingjs/sal.js"> </script>
+
+
+
+</html>

@@ -1,0 +1,85 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>数据字典管理</title>
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-3.3.1.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/layui/css/layui.css" media="all">
+<script src="${pageContext.request.contextPath }/layui/layui.js"></script>
+<script src="${pageContext.request.contextPath }/js/datajs/dictIndex.js"></script>
+</head>
+<body>
+	<!-- path传值 -->
+	
+	<input type ="hidden" id="path" value="${pageContext.request.contextPath }" >
+
+	<!-- 查询条件	 -->
+	
+    <div class="layui-inline">
+   		<div class="layui-inline" >
+   			<h1 class="layui-font">数据字典管理</h3>
+	    </div>
+	    <div class="layui-inline" style="margin-left: 50px">
+	    <div class="layui-item">
+	    	类别名：<input class="layui-input" id="name" name="name" autocomplete="off" />
+	    	类别号：<input class="layui-input" id="type" name="type" autocomplete="off" />
+	    	条目：<input class="layui-input" id="item" name="item" autocomplete="off" />
+	    </div> 
+	    </div>
+	    
+	    
+	    <!-- 查询 增加 按钮 -->
+	    
+	    <button id="search" class="layui-btn"  lay-filter="search"><i class="layui-icon layui-icon-search"></i></button>
+	    <button id="add" class="layui-btn" lay-filter="pageSubmit" ><i class="layui-icon layui-icon-add-1"></i></button>
+	   
+	   
+	   <!-- table -->
+	    <table id="demo" lay-filter="test" style="text-align: center;"></table>
+    </div>
+  
+  
+  
+  <!-- 增加弹出框		 -->
+  
+  <div class="site-text" style="margin: 5%; display: none;" id="window" >	
+	<form class="layui-form layui-form-pane"  style="width: 500px; height: 900px" id="dict" method="post" lay-filter="example">
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">类别编号</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="dict_type" name="dict_type" lay-verify="" autocomplete="off" placeholder="请输入类别编号" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">类别名</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="dict_type_name" name="dict_type_name" lay-verify="pass" autocomplete="off" placeholder="请输入类别名称" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">条目</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="dict_item" name="dict_item" lay-verify="title" autocomplete="off" placeholder="请输入条目" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">值</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="dict_value" name="dict_value" lay-verify="title" autocomplete="off" placeholder="请输入值" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">是否可编辑</label>
+	    <div class="layui-input-block" id="editnum">
+	      <input type="radio" name="dict_is_editable" value="1" title="可编辑" checked>
+	      <input type="radio" name="dict_is_editable" value="0" title="不可编辑" >
+	    </div>
+ 	 </div>
+	</form>
+</div>
+
+
+</body>
+</html>

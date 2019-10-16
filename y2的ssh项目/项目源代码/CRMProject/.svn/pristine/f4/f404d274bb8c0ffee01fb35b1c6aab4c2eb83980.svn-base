@@ -1,0 +1,37 @@
+package com.crm.client.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.crm.base.dao.JsonBaseDao;
+import com.crm.base.entity.PageBean;
+import com.crm.base.util.JsonUtils;
+import com.crm.base.util.StringUtils;
+
+public class LostDao extends JsonBaseDao {
+	
+	public List<Map<String,Object>> list(Map<String, String[]> pamap ,PageBean pageBean) throws InstantiationException, IllegalAccessException, SQLException{
+		String sql = "select * from cst_lost where true ";
+//		String dict_type_name = JsonUtils.getParamVal(pamap, "dict_type_name");
+		return super.executeQuery(sql, pageBean);
+	}
+	
+	public int add(Map<String, String[]> paMap) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, SQLException {
+		String sql="insert into cst_lost(cust_no,lst_cust_name,user_id,lst_cust_manager_name,lst_last_order_date,lst_lost_date,lst_delay,lst_reason,lst_status) values(?,?,?,?,?,?,?,?,?)";
+		return super.executeUpdate(sql, new String[] {"cust_no","lst_cust_name","user_id","lst_cust_manager_name","lst_last_order_date","lst_lost_date","lst_delay","lst_reason","lst_status"}, paMap);
+	}
+	
+	//	  根据ID	删除方法
+	public int del(Map<String, String[]> paMap) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, SQLException {
+		String sql="delete from cst_lost where lst_id=?";
+		return super.executeUpdate(sql, new String[] {"lst_id"}, paMap);
+	}
+	
+	
+	public int edit(Map<String, String[]> paMap) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, SQLException {
+		String sql="update cst_lost set cust_no,lst_cust_name,user_id,lst_cust_manager_name,lst_last_order_date,lst_lost_date,lst_delay,lst_reason,lst_status where lst_id=?";
+		return super.executeUpdate(sql, new String[] {"cust_no","lst_cust_name","user_id","lst_cust_manager_name","lst_last_order_date","lst_lost_date","lst_delay","lst_reason","lst_status","lst_id"}, paMap);
+	}
+
+}

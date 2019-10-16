@@ -1,0 +1,76 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>客户服务分析</title>
+<!-- 引入 ECharts 文件 -->
+<script src="${pageContext.request.contextPath }/js/jquery-3.3.1.js"></script>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts-en.common.js"></script>
+
+</head>
+<body> 
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom --> 
+    <div id="main1" style="width: 720px; height: 580px;"></div> 
+    <input type="hidden" id="path" value="${pageContext.request.contextPath }" >
+   <!--  <button type="button" id="button1">显示/隐藏</button>  -->
+    
+    
+    
+
+</body>
+<script type="text/javascript"> 
+   
+    var path = $("#path").val();
+    
+    var myChart = echarts.init(document.getElementById('main1'));
+
+    $.post(path+'/marketing/statAction_serviceList.action').done(function (data){	
+    	var cc = JSON.parse(data);
+    	console.log(cc)
+    	console.log(data)
+    	//使用刚指定的配置项和数据显示图表。
+    	myChart.setOption({
+    		roseType: 'angle',
+    		title : {
+    	        text: '客户关系管理系统',
+    	        subtext: '客户服务分析',
+    	        x:'center'
+    	    },
+    	    tooltip : {
+    	        trigger: 'item',
+    	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    	    },
+    	    legend: {
+    	        orient: 'vertical',
+    	        left: 'left',
+    	        data: cc.name
+    	    },
+    	    	
+    	    series : [
+    	        {
+    	            name: '访问来源',
+    	            type: 'pie',
+    	            radius : '55%',
+    	            center: ['50%', '60%'],
+    	            data:cc.data,
+    	            itemStyle: {
+    	                emphasis: {
+    	                    shadowBlur: 10,
+    	                    shadowOffsetX: 0,
+    	                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+    	                }
+    	            }
+    	        }
+    	    ]
+    	
+    	})
+    
+    })
+    
+    
+   
+   
+</script>  
+</html>

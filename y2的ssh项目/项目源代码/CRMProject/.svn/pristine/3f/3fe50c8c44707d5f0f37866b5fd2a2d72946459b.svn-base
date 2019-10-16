@@ -1,0 +1,93 @@
+package com.crm.role.web;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.crm.base.entity.TreeNode;
+import com.crm.base.util.ResponseUtil;
+import com.crm.base.web.BaseAction;
+import com.crm.role.biz.MenuBiz;
+import com.crm.role.biz.impl.MenuBizImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class MenuAction extends BaseAction {
+	
+	private MenuBiz  menuBiz ;
+	
+	
+	
+	
+	
+
+
+
+
+	public MenuBiz getMenuBiz() {
+		return menuBiz;
+	}
+
+
+
+
+
+
+
+
+
+	public void setMenuBiz(MenuBiz menuBiz) {
+		this.menuBiz = menuBiz;
+	}
+
+	
+	/**
+	 * 获取所有的菜单集合
+	 * @return
+	 */
+	public String menuList() {
+		try {
+			List<Map<String, Object>> menuList = menuBiz.menuList(request.getParameterMap(), null);
+			
+			Map<String, Object> ma = new HashMap<>();
+			ma.put("code", 0);
+			ma.put("msg", null);
+			ma.put("count", null);
+			ma.put("data", menuList);
+			
+			
+			ObjectMapper om = new ObjectMapper();
+			ResponseUtil.write(response, om.writeValueAsString(ma));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+	}
+	
+	
+
+
+
+
+	/**
+	 * 调用了tree方法
+	 * @return
+	 * @throws Exception
+	 */
+	public String treeMenu() throws Exception {
+		try {
+			List<TreeNode> list = this.menuBiz.list(request.getParameterMap(), null);
+			ObjectMapper om=new ObjectMapper();
+			String jsonStr = om.writeValueAsString(list);
+			ResponseUtil.write(response, jsonStr);
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return "success";
+	} 
+
+}

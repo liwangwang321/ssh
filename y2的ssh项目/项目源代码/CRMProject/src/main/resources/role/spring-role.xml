@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- MenuAction的spring的注入 -->
+ 	<bean class="com.crm.role.biz.MenuBiz" abstract="true" id="menuBiz" ></bean>
+	
+	<bean class="com.crm.role.dao.MenuDao" parent="jsonBaseDao" id="menuDao">
+		<property name="roleMenuBiz" ref="roleRoleMenuBizImpl"></property>
+	</bean>
+	
+	<bean class="com.crm.role.biz.impl.MenuBizImpl"  parent="menuBiz" id="menuBizImpl">
+		<property name="menuDao" ref="menuDao"></property> 
+	</bean>
+	 
+
+	<bean class="com.crm.role.web.MenuAction"  parent="baseAction" id="menuAction">
+		<property name="menuBiz" ref="menuBizImpl"></property>
+	</bean> 
+	
+	
+	
+	
+	
+	<!-- UserAction的spring的注入 -->
+	<bean class="com.crm.role.biz.UserBiz" abstract="true" id="roleUserBiz" ></bean>
+	
+	<bean class="com.crm.role.dao.UserDao" parent="jsonBaseDao" id="roleUserDao"></bean>
+	
+	<bean class="com.crm.role.biz.impl.UserBizImpl"  parent="roleUserBiz" id="roleUserBizImpl">
+		<property name="userDao" ref="roleUserDao"></property> 
+	</bean>
+	 
+
+	<bean class="com.crm.role.web.UserAction"  parent="baseAction" id="roleUserAction">
+		<property name="userBiz" ref="roleUserBizImpl"></property>
+		<property name="userRoleBiz" ref="roleUserRoleBizImpl"></property>
+	</bean> 
+	
+	
+	
+	<!-- UserRoleAction的spring的注入 -->
+	<bean class="com.crm.role.biz.UserRoleBiz" abstract="true" id="roleUserRoleBiz" ></bean>
+	
+	<bean class="com.crm.role.dao.UserRoleDao" parent="jsonBaseDao" id="roleUserRoleDao"></bean>
+	
+	<bean class="com.crm.role.biz.impl.UserRoleBizImpl"  parent="roleUserRoleBiz" id="roleUserRoleBizImpl">
+		<property name="userRoleDao" ref="roleUserRoleDao"></property> 
+	</bean>
+	 
+
+	<bean class="com.crm.role.web.UserRoleAction"  parent="baseAction" id="roleUserRoleAction">
+		<property name="userRoleBiz" ref="roleUserRoleBizImpl"></property>
+	</bean> 
+	
+	
+	
+	<!-- RoleAction的spring的注入 -->
+	<bean class="com.crm.role.biz.RoleBiz" abstract="true" id="roleRoleBiz" ></bean>
+	
+	<bean class="com.crm.role.dao.RoleDao" parent="jsonBaseDao" id="roleRoleDao"></bean>
+	
+	<bean class="com.crm.role.biz.impl.RoleBizImpl"  parent="roleRoleBiz" id="roleRoleBizImpl">
+		<property name="roleDao" ref="roleRoleDao"></property> 
+	</bean>
+	 
+
+	<bean class="com.crm.role.web.RoleAction"  parent="baseAction" id="roleRoleAction">
+		<property name="roleBiz" ref="roleRoleBizImpl"></property>
+		<property name="roleMenuBiz" ref="roleRoleMenuBizImpl"></property>
+	</bean>
+	
+	
+	
+	
+	<!-- RoleMenuAction的spring的注入 -->
+	<bean class="com.crm.role.biz.RoleMenuBiz" abstract="true" id="roleRoleMenuBiz" ></bean>
+	
+	<bean class="com.crm.role.dao.RoleMenuDao" parent="jsonBaseDao" id="roleRoleMenuDao"></bean>
+	
+	<bean class="com.crm.role.biz.impl.RoleMenuBizImpl"  parent="roleRoleMenuBiz" id="roleRoleMenuBizImpl">
+		<property name="roleMenuDao" ref="roleRoleMenuDao"></property> 
+	</bean>
+	 
+
+	<bean class="com.crm.role.web.RoleMenuAction"  parent="baseAction" id="roleRoleMenuAction">
+		<property name="roleMenuBiz" ref="roleRoleMenuBizImpl"></property>
+	</bean>
+	
+	
+	
+	
+
+</beans>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+	<package name="role" extends="base" namespace="/role">
+		<action name="menuAction_*" class="menuAction" method="{1}">
+			<result name="success">/sucess.jsp</result>
+		</action>
+		
+		<action name="userAction_*" class="roleUserAction" method="{1}">
+			<result name="success">/sucess.jsp</result>
+			<result name="index">/index.jsp</result>
+			<result name="login">/login.jsp</result>
+		</action>
+		
+		<action name="roleAction_*" class="roleRoleAction" method="{1}">
+			<result name="success">/sucess.jsp</result>
+			<result name="index">/index.jsp</result>
+			<result name="login">/login.jsp</result>
+		</action>
+	</package>
+</struts>

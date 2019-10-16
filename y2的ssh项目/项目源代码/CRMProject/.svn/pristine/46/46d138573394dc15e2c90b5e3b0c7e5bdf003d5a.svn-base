@@ -1,0 +1,75 @@
+package com.crm.client.web;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.crm.base.util.ResponseUtil;
+import com.crm.base.web.BaseAction;
+import com.crm.book.biz.impl.UserBizImpl;
+import com.crm.client.biz.ClientBiz;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class LostAction extends BaseAction {
+	private ClientBiz clientBiz ;
+	
+
+	public ClientBiz getClientBiz() {
+		return clientBiz;
+	}
+
+
+	public void setClientBiz(ClientBiz clientBiz) {
+		this.clientBiz = clientBiz;
+	}
+
+
+
+	public String list() {
+		try {
+			List<Map<String, Object>> list2 = clientBiz.list(request.getParameterMap(), null);
+			for (Map<String, Object> map : list2) {
+				System.out.println(map);
+			}
+			Map<String, Object> ma = new HashMap<>();
+			ma.put("code", 0);
+			ma.put("msg", null);
+			ma.put("count", null);
+			ma.put("data", list2);
+			ObjectMapper om = new ObjectMapper();
+			ResponseUtil.write(response, om.writeValueAsString(ma));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "index";
+	}
+	
+	public int add() throws JsonProcessingException, Exception {
+		int add = clientBiz.add(request.getParameterMap());
+		ObjectMapper om=new ObjectMapper();
+		ResponseUtil.write(response, om.writeValueAsString(add));
+		return add;
+	}
+	
+	
+	public int del() throws JsonProcessingException, Exception {
+		int del = clientBiz.del(request.getParameterMap());
+		ObjectMapper om=new ObjectMapper();
+		ResponseUtil.write(response, om.writeValueAsString(del));
+		return del;
+	}
+	
+	
+	public int edit() throws JsonProcessingException, Exception {
+		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("html/text;charset=utf-8");
+		int edit = clientBiz.edit(request.getParameterMap());
+		ObjectMapper om=new ObjectMapper();
+		ResponseUtil.write(response, om.writeValueAsString(edit));
+		return edit;
+	}
+	
+
+}

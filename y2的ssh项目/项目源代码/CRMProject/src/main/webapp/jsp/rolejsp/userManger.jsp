@@ -1,0 +1,129 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>用户管理</title>、
+ <script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-3.3.1.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/layui/css/layui.css" media="all">
+<script src="${pageContext.request.contextPath }/layui/layui.js"></script>
+<script src="${pageContext.request.contextPath }/js/rolejs/userManger.js"></script>
+</head>
+<body>
+
+
+
+<blockquote class="layui-elem-quote">
+<!-- 搜索框 -->
+
+<div class="layui-form" id="select" >
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名字</label>
+        <div class="layui-input-inline">
+            <input type="text" id='sel_user_name' name="user_name"
+                   lay-verify="required" placeholder="请输关键字" autocomplete="true"
+                   class="layui-input" value="">
+        </div>
+         <label class="layui-form-label">角色</label>
+	      <div class="layui-input-inline">
+	         <select class="seloption" name="role_id" id="sel_role_id" lay-verify="required" lay-filter="xmFilter">
+                   <option value="-1">全部</option>
+                   
+              </select>
+	      </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	       <button class="layui-btn layui-btn-normal layui-btn-radius" id="sel" data-type="reload"><i class="layui-icon">&#xe615;</i>查询</button>
+			<button class="layui-btn layui-btn-normal"  id="add" data-type="add">增加用户</button>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="layui-btn layui-btn-sm layui-btn-normal"  id="ref" data-type="ref">刷新</button>
+			
+	      <br>
+	      <br>
+         <label class="layui-form-label">用户状态</label>
+	    <div class="layui-input-block" id="editFlag">
+	   	  <input type="radio" name="user_flag" value="-1" title="全部" checked>
+	      <input type="radio" name="user_flag" value="1" title="可用" >
+	      <input type="radio" name="user_flag" value="0" title="不可用" >
+	      
+	    </div>
+       
+    </div>
+</div>
+
+
+</blockquote>
+
+<!--隐藏域传值  -->
+<input type="hidden"  id="path" value="${pageContext.request.contextPath}" >
+<!--根据table id 来展示表格数据  -->
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<!-- 表格 编辑 删除 绑定按钮 -->
+
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-xs" lay-event="editRole"><i class="layui-icon">&#xe642;</i>增添角色</a>
+  <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">编辑用户</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+ <!-- 增加弹出框		 -->
+  
+  <div class="site-text" style="margin: 5%; display: none; " id="box1" >	
+	<form class="layui-form layui-form-pane" onsubmit="return false" style="width: 500px; height: 200px" id="userRole" method="post"  >
+	  	<input type="hidden" id="user_id" name="user_id" >
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">用户名称</label>
+	    <div class="layui-input-inline">
+	      <input type="text" id="user_name" name="user_name" lay-verify="required" autocomplete="off" placeholder="请输入用户名称" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">用户密码</label>
+	    <div class="layui-input-inline">
+	      <input type="text" id="user_password" name="user_password" lay-verify="required" autocomplete="off" placeholder="请输入用户密码" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">用户角色</label>
+	    <div class="layui-input-inline">
+	         <select class="seloption" name="role_id" id="role_id" lay-verify="required" lay-filter="xmFilter">
+                   <option value="-1">请选择</option>
+              </select>
+	      </div>
+	  </div>
+	 
+	</form>
+</div>
+
+ <div class="site-text" style="margin: 5%; display: none; " id="box2" >	
+	<form class="layui-form layui-form-pane" onsubmit="return false" style="width: 500px; height: 200px" id="userRole2" method="post" lay-filter="example">
+	  <input type="hidden" id="user_id2" name="user_id" >	 
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">用户角色</label>
+	    <div class="layui-input-inline">
+	         <select class="seloption" name="role_id" id="role_id2" lay-verify="required" lay-filter="xmFilter">
+                   <option value="-1">请选择</option>
+              </select>
+	      </div>
+	  </div>
+	 
+	</form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

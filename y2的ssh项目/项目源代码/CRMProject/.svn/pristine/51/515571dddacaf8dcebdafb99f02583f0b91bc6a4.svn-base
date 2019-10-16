@@ -1,0 +1,205 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-3.3.1.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/layui/css/layui.css" media="all">
+<script src="${pageContext.request.contextPath }/layui/layui.js"></script>
+<title>服务创建</title>
+</head>
+<body>
+<!--隐藏域传值  -->
+	<input type="hidden" id="path"
+		value="${pageContext.request.contextPath}">
+	<form class="layui-form" action="" id="serviceCreationForm"
+		lay-filter="serviceCreationForm">
+		 <div class="layui-form-item">
+    <label class="layui-form-label">客户名称</label>
+    <div class="layui-input-block" lay-filter="cust">
+    
+    
+      <select name="cust_no" id="cust_no" lay-verify="" lay-search lay-filter="test" >
+        <option value="-1"></option>
+      </select>
+    </div>
+  </div>
+		<div class="layui-row" style="margin-top: 15px">
+						<div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6" >
+				<div
+				
+				class="layui-inline layui-col-xs12 layui-col-sm12 layui-col-md12" style="margin-top: 15px; width:958px">
+				<label class="layui-form-label">客户编号</label>
+				<div class="layui-input-block">
+					<input type="text" name="svr_cust_name" id="svr_cust_name" required
+						lay-verify="required" placeholder="请输入客户编号" autocomplete="off"
+						class="layui-input">
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6" style="margin-top: 15px; width:958px">
+				<label class="layui-form-label">服务类型</label>
+				<div class="layui-input-block" lay-filter="svr">
+					<select name="svr_type" id="svr_type">
+					<option value="-1">请选择</option>
+					</select>
+				</div>
+			</div>
+		
+		<div class="layui-row" style="margin-top: 15px">
+			<div
+				class="layui-inline layui-col-xs12 layui-col-sm12 layui-col-md12" style="margin-top: 15px; width:958px">
+				<label class="layui-form-label">概要</label>
+				<div class="layui-input-block">
+					<input type="text" name="svr_title" id="svr_title" required
+						lay-verify="required" placeholder="请输入概要" autocomplete="off"
+						class="layui-input">
+				</div>
+			</div>
+			
+			<div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6" style="margin-top: 15px;  "> 
+				<label class="layui-form-label">创建时间</label>
+				<div class="layui-input-block">
+					<input type="text" class="layui-input " readonly="readonly"  id="svr_create_date" name="svr_create_date"
+						 >
+				</div>
+			</div>
+		</div>
+		<div class="layui-row" style="margin-top: 15px">
+			<div
+				class="layui-inline layui-col-xs12 layui-col-sm12 layui-col-md12">
+				<label class="layui-form-label">服务请求</label>
+				<div class="layui-input-block">
+					<textarea name="svr_request" id="svr_request" placeholder="请输入服务请求"
+						class="layui-textarea"></textarea>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-row" style="margin-top: 15px">
+			<div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6">
+				<label class="layui-form-label">创建人</label>
+				<div class="layui-input-block">
+					<input type="hidden" name="svr_create_id" id="svr_create_id" class="layui-input" value="${user.user_id}">
+						
+					 <input type="text" name="svr_create_name" id="svr_create_name" class="layui-input" value="${user.user_name}" readonly="readonly" >
+				</div>
+			</div>
+			<div class="layui-inline layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <input type="text" value="新创建" autocomplete="off" class="layui-input " readonly="readonly">
+                    </div>
+                </div>
+		</div>
+		<!--提交按钮-->
+		<div class="layui-row" style="margin-top: 30px" id="usersSubmitDiv"
+			align="center">
+			<div
+				class="layui-inline layui-col-xs12 layui-col-sm12 layui-col-md12"
+				style="text-align: center;">
+				<button class="layui-btn" lay-submit
+					lay-filter="serviceCreationFormSubmit">立即提交</button>
+			</div>
+		</div>
+	</form>
+</body>
+<script type="text/javascript">
+		var t=document.getElementById("svr_create_date"); 
+		  d=new Date(); 
+		  t.value=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+"-"+d.getHours()+":"+d.getMinutes();
+		   
+	</script>
+<script >
+var path = document.getElementById("path").value;
+	$(function(){
+		 $.ajax({
+				url: path+'/service/serviceAction_listZd.action',
+				dataType: 'json',
+				data:{},
+				type: 'post',
+				success: function (data) {
+					console.log(data);
+					$.each(data, function (index, item) {
+						$('#svr_type').append(new Option(item.dict_item, item.dict_value));// 下拉菜单里添加元素
+					});
+					layui.form.render('select'); 
+				}
+			})
+			//	绑定下拉框
+	
+			
+			
+	})
+layui.use(['form'],function(){
+	
+
+	
+	var form = layui.form;
+	var $ = layui.$;
+	
+	  $.ajax({
+			url: path+'/service/serviceAction_cxkh.action',
+			dataType: 'json',
+			data:{},
+			type: 'post',
+			success: function (data) {
+				
+				console.log(data);
+				$.each(data, function (index, item) {
+					$('#cust_no').append(new Option(item.cust_name, item.cust_no));// 下拉菜单里添加元素
+				});
+				layui.form.render('select'); 
+			}
+		})
+
+	
+			
+	
+	// 监听提交
+	form.on('submit(serviceCreationFormSubmit)', function(event) {
+		var data = event.field;
+		 $.post(path + '/service/serviceAction_addService.action', {
+				 cust_no: data.cust_no,
+				 svr_create_date: data.svr_create_date,
+				 svr_create_id: data.svr_create_id,
+				 svr_create_name: data.svr_create_name,
+				 svr_cust_name: $("#cust_no").find("option[value='"+data.cust_no+"']").prop("selected",true).text(),
+				 svr_request: data.svr_request,
+				 svr_title: data.svr_title,
+				 svr_type: data.svr_type,
+		 }, function(data) {
+			if (data > 0) {
+				layer.alert('创建成功', {
+					icon : 1,
+					title : '提示'
+				}, function(i) {
+					layer.close(i);
+					$("#svr_title").val("");
+					$("#svr_request").val("");
+					$("#svr_cust_name").val("");
+				})
+			} else {
+				layer.msg('创建失败');
+			}
+		}) 
+		return false;
+	});
+	  
+	  form.on('select(test)', function(data){
+		  console.log(data.elem); //得到select原始DOM对象
+		  console.log(data.value); //得到被选中的值
+		  console.log(data.othis); //得到美化后的DOM对象
+		  
+		  $("#svr_cust_name").val(data.value);
+		  
+
+		});     
+
+});
+
+
+</script>
+</html>

@@ -1,0 +1,23 @@
+package com.crm.role.biz;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.crm.base.entity.PageBean;
+import com.crm.base.entity.TreeNode;
+
+public interface MenuBiz {
+	public List<TreeNode> list(Map<String, String[]> map,PageBean pageBean) throws InstantiationException, IllegalAccessException, SQLException ;
+	
+	/**
+	 * 查询所有菜单
+	 * @param map
+	 * @param pageBean
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws SQLException
+	 */
+	public List<Map<String, Object>> menuList(Map<String, String[]> map,PageBean pageBean) throws InstantiationException, IllegalAccessException, SQLException;
+}

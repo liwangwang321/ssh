@@ -1,0 +1,52 @@
+package com.crm.data.web;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.crm.base.entity.PageBean;
+import com.crm.base.util.ResponseUtil;
+import com.crm.base.web.BaseAction;
+import com.crm.data.biz.DataBiz;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class StorageAction extends BaseAction {
+	
+	private DataBiz dataBiz;
+	
+	public DataBiz getDataBiz() {
+		return dataBiz;
+	}
+
+	public void setDataBiz(DataBiz dataBiz) {
+		this.dataBiz = dataBiz;
+	}
+	
+	public String list() throws JsonProcessingException, Exception {
+		PageBean pageBean = new PageBean();
+		pageBean.setRequest(request);
+		try {
+			List<Map<String, Object>> list2 = dataBiz.list(request.getParameterMap(), pageBean);
+			for (Map<String, Object> map : list2) {
+				map.put("pro", map.get("prod_name")+"-"+map.get("prod_type"));
+			}
+			Map<String, Object> ma = new HashMap<>();
+			ma.put("code", 0);
+			ma.put("msg", null);
+			ma.put("count", pageBean.getTotal());
+			ma.put("data", list2);
+			ObjectMapper om = new ObjectMapper();
+			ResponseUtil.write(response, om.writeValueAsString(ma));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "index";
+	}
+	
+	
+}

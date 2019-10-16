@@ -1,0 +1,43 @@
+package com.crm.marketing.biz.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import com.crm.base.entity.PageBean;
+import com.crm.marketing.biz.SalPlanBiz;
+import com.crm.marketing.dao.SalPlanDao;
+
+public class SalPlanBizImpl implements SalPlanBiz{
+	private SalPlanDao planDao;
+		
+	public SalPlanDao getPlanDao() {
+		return planDao;
+	}
+
+	public void setPlanDao(SalPlanDao planDao) {
+		this.planDao = planDao;
+	}
+
+	@Override
+	public List<Map<String, Object>> PlanList(Map<String, String[]> pamap, PageBean pageBean)
+			throws InstantiationException, IllegalAccessException, SQLException {
+		// TODO Auto-generated method stub
+		return planDao.PlanList(pamap, pageBean);
+	}
+
+	@Override
+	public int addPlan(Map<String, String[]> pamap) throws InstantiationException, IllegalAccessException, SQLException,
+			NoSuchFieldException, SecurityException, IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return planDao.addPlan(pamap);
+	}
+
+	@Override
+	public int editPlan(Map<String, String[]> pamap) throws InstantiationException, IllegalAccessException,
+			SQLException, NoSuchFieldException, SecurityException, IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return planDao.editPlan(pamap);
+	}
+
+}

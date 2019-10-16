@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+	<package name="client" extends="base" namespace="/client">
+		<action name="clientAction_*" class="clientUserAction" method="{1}">
+			<result name="success">/sucess.jsp</result>
+		</action>
+		<action name="linkAction_*" class="linkAction" method="{1}">
+			<result name="success">/sucess.jsp</result>
+		</action>
+		<action name="activityAction_*" class="activityAction" method="{1}">
+			<result name="success">/sucess.jsp</result>
+		</action>
+		<action name="lostAction_*" class="lostAction" method="{1}">
+			<result name="success">/sucess.jsp</result>
+		</action>
+		<action name="orderAction_*" class="orderAction" method="{1}">
+			<result name="success">/sucess.jsp</result>
+		</action>
+	</package>
+</struts>

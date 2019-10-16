@@ -1,0 +1,306 @@
+package com.crm.role.web;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.crm.base.entity.PageBean;
+import com.crm.base.util.JsonUtils;
+import com.crm.base.util.ResponseUtil;
+import com.crm.base.util.StringUtils;
+import com.crm.base.web.BaseAction;
+import com.crm.role.biz.UserBiz;
+import com.crm.role.biz.UserRoleBiz;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class UserAction extends BaseAction {
+	
+	private UserBiz userBiz;//用户
+	private UserRoleBiz userRoleBiz;//用户角色
+	
+	
+
+	public UserRoleBiz getUserRoleBiz() {
+		return userRoleBiz;
+	}
+
+	public void setUserRoleBiz(UserRoleBiz userRoleBiz) {
+		this.userRoleBiz = userRoleBiz;
+	}
+
+	public UserBiz getUserBiz() {
+		return userBiz;
+	}
+
+	public void setUserBiz(UserBiz userBiz) {
+		this.userBiz = userBiz;
+	}
+	
+	/**
+	 * 登录时进行一个角色的获取，并同时获取这个用户的角色形式：(role_name:"r001,r002")
+	 * @return
+	 */
+	public String login() {
+		
+		try {
+			List<Map<String, Object>> listu = userBiz.getUser(request.getParameterMap(), null);
+			if(listu.size()>0 && listu !=null) {//登陆成功
+				
+				//将登陆成功的用户取出来
+				Map<String, Object> user = listu.get(0);
+				
+				
+				
+				
+				//通过用户的ID去获取用户角色表的角色
+				Object user_id = user.get("user_id");
+				List<Map<String, Object>> userRole = userRoleBiz.getUserRole(user_id+"",null);
+				
+				
+				if(userRole.size()>0 && userRole !=null) {//这个用户有角色
+					StringBuilder sb = new StringBuilder();
+					for (Map<String, Object> map : userRole) {//获取用户所有的角色id(role_id)
+						sb.append(","+map.get("role_id"));
+					}
+					request.setAttribute("roleid", sb.substring(1));
+					System.out.println("userAction的登录界面返回的角色："+sb.substring(1));
+					
+					request.setAttribute("msg", "登录成功");
+					user.put("role_id", sb.substring(1));
+
+					//放入session集合
+					session.setAttribute("user", user);
+					
+					return "index";
+					
+					
+				}
+				else {//这个用户没有角色
+					
+					
+				}
+				
+			}
+			else {//登陆失败
+				request.setAttribute("msg", "登录失败");
+				return "login";
+				
+			}
+			
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "login";
+	}
+	
+	/**
+	 * 查询用户表的所有信息，
+	 * 或者根据名字查询，
+	 * 
+	 * 返回含有角色表的角色名
+	 * @return 
+	 */
+	public String userList() {
+		try {
+			
+			PageBean pageBean = new PageBean();
+			pageBean.setRequest(request);
+			
+			List<Map<String, Object>> userList = userBiz.userList(request.getParameterMap(), pageBean);
+			List<Map<String, Object>> zhuan = userBiz.zhuan(userList);
+			
+			
+			Map<String, Object> ma = new HashMap<>();
+			ma.put("code", 0);
+			ma.put("msg", "成功了");
+			ma.put("count", pageBean.getTotal());
+			ma.put("data", zhuan);
+			
+			ObjectMapper om = new ObjectMapper();
+			ResponseUtil.write(response, om.writeValueAsString(ma));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+	}
+	/**
+	 * 增加方法
+	 * 
+	 * 在增加用户表的同时，把用户角色表也加上
+	 * @return
+	 */
+	public String addUser() {
+		
+		try {
+			int a = 0;
+			String role_id = JsonUtils.getParamVal(request.getParameterMap(), "role_id");
+			String user_name = JsonUtils.getParamVal(request.getParameterMap(), "user_name");
+			String user_password = JsonUtils.getParamVal(request.getParameterMap(), "user_password");
+			if(StringUtils.isNotBlank(user_name) && StringUtils.isNotBlank(user_password)  && !"-1".equals(role_id) ) {
+				int addUser = userBiz.addUser(request.getParameterMap());
+				List<Map<String, Object>> user = userBiz.getUser(request.getParameterMap(), null);
+				if(user.size()>0 && user!=null) {
+					Map<String, Object> map = user.get(0);
+					Object object = map.get("user_id");
+					String user_id = object+"";
+					int addUser2 = userRoleBiz.addUser(user_id, role_id);
+					
+					System.out.println("OK，看这里："+(addUser+addUser2));
+					if((addUser+addUser2)>=2) {
+						a=1;
+					}
+				}
+				
+			}
+			
+			ObjectMapper om = new ObjectMapper();
+			ResponseUtil.write(response, om.writeValueAsString(a));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return null;
+	}
+	
+	/***
+	 * 修改用户，也可以
+	 * @return
+	 */
+	public String editUser() {
+		
+		try {
+				int a = 0;
+				String role_id = JsonUtils.getParamVal(request.getParameterMap(), "role_id");
+				String user_id = JsonUtils.getParamVal(request.getParameterMap(), "user_id");
+				//修改用户信息
+				if(StringUtils.isNotBlank(role_id) && StringUtils.isNotBlank(user_id) && !"-1".equals(role_id)) {
+						
+					int editUser = userBiz.editUser(request.getParameterMap());
+					
+					
+					//删除用户角色表里的信息
+					int editUser2 = userRoleBiz.delUser(user_id);
+					
+					
+					//增加用户角色表的信息
+					int addUser = userRoleBiz.addUser(user_id, role_id);
+					if((addUser+editUser+editUser2)>=2) {
+						a=1;
+					}
+				}
+				if("-1".equals(role_id)){//如果下拉框没有选择，则告知
+					a = -1;
+				}
+			
+			ObjectMapper om = new ObjectMapper();
+			ResponseUtil.write(response, om.writeValueAsString(a));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/***
+	 * 删除用户表，同时删除用户角色表
+	 * @return
+	 */
+	public String delUser() {
+		
+		try {
+					int a = 0;
+					String user_id = JsonUtils.getParamVal(request.getParameterMap(), "user_id");
+						
+					//删除用户角色表的信息
+					int delUser = userBiz.delUser(request.getParameterMap());
+					
+					//删除用户角色表里的信息
+					int delUserRole = userRoleBiz.delUser(user_id);
+					
+					
+					if((delUserRole+delUser)>=2) {
+						a=1;
+					}
+			
+			ObjectMapper om = new ObjectMapper();
+			ResponseUtil.write(response, om.writeValueAsString(a));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 给指定用户增加用户角色表的信息
+	 * @return
+	 */
+	public String addUserRole() {
+		try {
+				int a = 0;
+				String role_id = JsonUtils.getParamVal(request.getParameterMap(), "role_id");
+				String user_id = JsonUtils.getParamVal(request.getParameterMap(), "user_id");
+				//修改用户信息
+				if(StringUtils.isNotBlank(role_id) && StringUtils.isNotBlank(user_id) && !"-1".equals(role_id)) {
+					
+					List<Map<String, Object>> userRole = userRoleBiz.getUserRole(user_id,role_id);
+					if(userRole==null|| !(userRole.size()>0)) {//如果发现原先的表里没有的话，就加入进去
+						int addUser = userRoleBiz.addUser(user_id, role_id);
+						a=addUser;
+					}
+					else {
+						a=-2;
+					}
+					
+				}
+				if("-1".equals(role_id)){//如果下拉框没有选择，则告知
+					a = -1;
+				}
+		
+			ObjectMapper om = new ObjectMapper();
+			ResponseUtil.write(response, om.writeValueAsString(a));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 修改用户的状态
+	 * @return
+	 */
+	public String editUserState () {
+		try {
+			int a = 0;
+			String state = JsonUtils.getParamVal(request.getParameterMap(), "state");
+			String user_id = JsonUtils.getParamVal(request.getParameterMap(), "user_id");
+			//修改用户状态
+			if(StringUtils.isNotBlank(state) && StringUtils.isNotBlank(user_id) ) {
+				
+				int editUserState = userBiz.editUserState(user_id, state);
+				a = editUserState;
+				
+			}
+	
+		ObjectMapper om = new ObjectMapper();
+		ResponseUtil.write(response, om.writeValueAsString(a));
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+		
+		
+		return null;
+	}
+	
+	
+
+}

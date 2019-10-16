@@ -1,0 +1,31 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/layui/css/layui.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/layui/layui.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jsp/rolejsp/layui/treeTable.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/rolejs/menuManger.js"></script>
+<style type="text/css">
+			body{margin:10px auto;width: 750px;}ul{margin-top:5px;}li{margin-top:3px;}.layui-form-switch{margin-top: 0;}#tree1 ul+ul{border-top: 1px dashed #e2e2e2;}
+		</style>
+
+</head>
+<body>
+<input type="hidden" id="path" value="${pageContext.request.contextPath}" >
+
+<button type="button" class="layui-btn layui-btn-primary layui-btn-sm get-checked">获取选中</button>
+		<button type="button" class="layui-btn layui-btn-primary layui-btn-sm refresh">刷新（新增）</button>
+		<button type="button" class="layui-btn layui-btn-primary layui-btn-sm open-all">全部展开</button>
+		<button type="button" class="layui-btn layui-btn-primary layui-btn-sm close-all">全部关闭</button>
+		<button type="button" class="layui-btn layui-btn-primary layui-btn-sm change-icon">随机更换小图标</button>
+		
+		<table class="layui-table layui-form" id="tree-table" lay-size="sm"></table>
+
+
+
+</body>
+</html>
