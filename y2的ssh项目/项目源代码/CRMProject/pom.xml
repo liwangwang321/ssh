@@ -20,7 +20,7 @@
 		<jstl.version>1.2</jstl.version>
 		<standard.version>1.1.2</standard.version>
 		<tomcat-jsp.version>8.0.47</tomcat-jsp.version>
-		<jackson.version>2.9.3</jackson.version>
+		<jackson.version>2.10.1</jackson.version>
 	</properties>
   <dependencies>
    		<dependency>
